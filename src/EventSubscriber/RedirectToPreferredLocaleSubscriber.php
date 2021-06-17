@@ -69,8 +69,7 @@ class RedirectToPreferredLocaleSubscriber implements EventSubscriberInterface
         if (!$event->isMainRequest() || '/' !== $request->getPathInfo()) {
             return;
         }
-        // Ignore requests from referrers with the same HTTP host in order to prevent
-        // changing language for users who possibly already selected it for this application.
+
         $referrer = $request->headers->get('referer');
         if (null !== $referrer && u($referrer)->ignoreCase()->startsWith($request->getSchemeAndHttpHost())) {
             return;
