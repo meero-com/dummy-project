@@ -48,6 +48,8 @@ use function Symfony\Component\String\u;
  */
 class AddUserCommand extends Command
 {
+    // to make your command lazily loaded, configure the $defaultName static property,
+    // so it will be instantiated only when the command is actually called.
     protected static $defaultName = 'app:add-user';
 
     /**
@@ -78,6 +80,8 @@ class AddUserCommand extends Command
         $this
             ->setDescription('Creates users and stores them in the database')
             ->setHelp($this->getCommandHelp())
+            // commands can optionally define arguments and/or options (mandatory and optional)
+            // see https://symfony.com/doc/current/components/console/console_arguments.html
             ->addArgument('username', InputArgument::OPTIONAL, 'The username of the new user')
             ->addArgument('password', InputArgument::OPTIONAL, 'The plain password of the new user')
             ->addArgument('email', InputArgument::OPTIONAL, 'The email of the new user')
@@ -86,11 +90,28 @@ class AddUserCommand extends Command
         ;
     }
 
+    /**
+     * This optional method is the first one executed for a command after configure()
+     * and is useful to initialize properties based on the input arguments and options.
+     */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
+        // SymfonyStyle is an optional feature that Symfony provides so you can
+        // apply a consistent look to the commands of your application.
+        // See https://symfony.com/doc/current/console/style.html
         $this->io = new SymfonyStyle($input, $output);
     }
 
+    /**
+     * This method is executed after initialize() and before execute(). Its purpose
+     * is to check if some of the options/arguments are missing and interactively
+     * ask the user for those values.
+     *
+     * This method is completely optional. If you are developing an internal console
+     * command, you probably should not implement this method because it requires
+     * quite a lot of work. However, if the command is meant to be used by external
+     * users, this method is a nice way to fall back and prevent errors.
+     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if (null !== $input->getArgument('username') && null !== $input->getArgument('password') && null !== $input->getArgument('email') && null !== $input->getArgument('full-name')) {
@@ -144,6 +165,10 @@ class AddUserCommand extends Command
         }
     }
 
+    /**
+     * This method is executed after interact() and initialize(). It usually
+     * contains the logic to execute to complete this command task.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stopwatch = new Stopwatch();
@@ -204,6 +229,11 @@ class AddUserCommand extends Command
         }
     }
 
+    /**
+     * The command help is usually included in the configure() method, but when
+     * it's too long, it's better to define a separate method to maintain the
+     * code readability.
+     */
     private function getCommandHelp(): string
     {
         return <<<'HELP'

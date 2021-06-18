@@ -37,6 +37,10 @@ class CheckRequirementsSubscriber implements EventSubscriberInterface
         $this->entityManager = $entityManager;
     }
 
+    // Event Subscribers must define this method to declare the events they
+    // listen to. You can listen to several events, execute more than one method
+    // for each event and set the priority of each event too.
+    // See https://symfony.com/doc/current/event_dispatcher.html#creating-an-event-subscriber
     public static function getSubscribedEvents(): array
     {
         return [
