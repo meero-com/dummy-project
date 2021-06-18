@@ -40,10 +40,6 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('blog_index');
         }
 
-        // this statement solves an edge-case: if you change the locale in the login
-        // page, after a successful login you are redirected to a page in the previous
-        // locale. This code regenerates the referrer URL whenever the login page is
-        // browsed, to ensure that its locale is always the current one.
         $this->saveTargetPath($request->getSession(), 'main', $this->generateUrl('admin_index'));
 
         return $this->render('security/login.html.twig', [
@@ -55,11 +51,6 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * This is the route the user can use to logout.
-     *
-     * But, this will never be executed. Symfony will intercept this first
-     * and handle the logout automatically. See logout in config/packages/security.yaml
-     *
      * @Route("/logout", name="security_logout")
      */
     public function logout(): void
