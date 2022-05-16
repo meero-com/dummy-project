@@ -115,6 +115,14 @@ class Post
      */
     private $tags;
 
+    /**
+     * @var Post
+     *
+     * @ORM\ManyToOne(targetEntity="Categorie")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $categorie;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -222,5 +230,15 @@ class Post
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    public function getPost()
+    {
+        return $this->post;
+    }
+
+    public function setPost(Post $post)
+    {
+        $this->post = $post;
     }
 }
